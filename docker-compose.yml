@@ -10,6 +10,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./SQL:/docker-entrypoint-initdb.d
     networks:
       - muscu-network
 
