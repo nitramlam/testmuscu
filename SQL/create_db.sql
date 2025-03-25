@@ -5,9 +5,7 @@ USE musculation_db;
 -- Table des utilisateurs
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255)
+    name VARCHAR(255)
 );
 
 -- Table des jours
@@ -34,5 +32,4 @@ CREATE TABLE IF NOT EXISTS exercises (
     FOREIGN KEY (session_id) REFERENCES sessions(id)
 );
 
--- Exemple de données
-INSERT INTO users (name, email, password) VALUES ('John Doe', 'john@example.com', 'password123');
+INSERT INTO users (name) VALUES ('John Doe');
