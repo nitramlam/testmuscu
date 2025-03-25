@@ -17,7 +17,11 @@ CREATE TABLE IF NOT EXISTS days (
 -- Table des séances
 CREATE TABLE IF NOT EXISTS sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    session_name VARCHAR(255)
+    session_name VARCHAR(255),
+    user_id INT,
+    day_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (day_id) REFERENCES days(id)
 );
 
 -- Table des exercices
@@ -32,4 +36,16 @@ CREATE TABLE IF NOT EXISTS exercises (
     FOREIGN KEY (session_id) REFERENCES sessions(id)
 );
 
+-- Table intermédiaire pour lier plusieurs séances à un exercice
+CREATE TABLE IF NOT EXISTS exercise_sessions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    exercise_id INT,
+    session_id INT,
+    FOREIGN KEY (exercise_id) REFERENCES exercises(id),
+    FOREIGN KEY (session_id) REFERENCES sessions(id)
+);
+
 INSERT INTO users (name) VALUES ('John Doe');
+
+-- Ajout de jours d'exemple
+INSERT INTO days (day_name) VALUES ('Lundi'), ('Mardi'), ('Mercredi'), ('Jeudi'), ('Vendredi'), ('Samedi'), ('Dimanche');

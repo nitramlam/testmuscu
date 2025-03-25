@@ -58,60 +58,74 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Sessions</title>
+    <style>
+        #form-container {
+            display: none;
+        }
+    </style>
+    <script>
+        function toggleForm() {
+            const formContainer = document.getElementById('form-container');
+            formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
 </head>
 
 <body>
     <h1>Gestion des Sessions</h1>
 
-    <!-- Formulaire pour ajouter une session -->
-    <h2>Ajouter une session</h2>
-    <form method="POST">
-        <label for="session_name">Nom de la session :</label>
-        <input type="text" name="session_name" id="session_name"><br>
-
-        <button type="submit" name="add_session">Ajouter</button>
-    </form>
-
     <!-- Liste des sessions existantes -->
-    <h2>Liste des sessions</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom de la session</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h2>Liste des sessions existantes</h2>
+    <ul>
+        <?php if (!empty($sessions)): ?>
+            <?php foreach ($sessions as $session): ?>
+                <li>
+                    <a href="session_details.php?session_id=<?= htmlspecialchars($session['id']) ?>">
+                        <?= htmlspecialchars($session['session_name'] ?? '') ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li>Aucune session trouvée.</li>
+        <?php endif; ?>
+    </ul>
+
+    <!-- Bouton pour afficher le formulaire -->
+    <button onclick="toggleForm()">Ajouter ou modifier une session</button>
+
+    <!-- Formulaire pour ajouter, modifier ou supprimer une session -->
+    <div id="form-container">
+        <h2>Ajouter, modifier ou supprimer une session</h2>
+        <ul>
             <?php if (!empty($sessions)): ?>
                 <?php foreach ($sessions as $session): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($session['id'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($session['session_name'] ?? '') ?></td>
-                        <td>
-                            <!-- Formulaire pour modifier une session -->
-                            <form method="POST" style="display:inline;">
-                                <input type="hidden" name="session_id" value="<?= htmlspecialchars($session['id']) ?>">
-                                <input type="text" name="session_name" placeholder="Nom de la session"
-                                    value="<?= htmlspecialchars($session['session_name'] ?? '') ?>">
-                                <button type="submit" name="edit_session">Modifier</button>
-                            </form>
-
-                            <!-- Formulaire pour supprimer une session -->
-                            <form method="POST" style="display:inline;">
-                                <input type="hidden" name="session_id" value="<?= htmlspecialchars($session['id']) ?>">
-                                <button type="submit" name="delete_session">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
+                    <li>
+                        <?= htmlspecialchars($session['session_name'] ?? '') ?>
+                        <!-- Boutons pour modifier ou supprimer -->
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="session_id" value="<?= htmlspecialchars($session['id']) ?>">
+                            <input type="text" name="session_name" placeholder="Modifier le nom"
+                                value="<?= htmlspecialchars($session['session_name'] ?? '') ?>">
+                            <button type="submit" name="edit_session">Modifier</button>
+                            <button type="submit" name="delete_session">Supprimer</button>
+                        </form>
+                    </li>
                 <?php endforeach; ?>
             <?php else: ?>
-                <tr>
-                    <td colspan="3">Aucune session trouvée.</td>
-                </tr>
+                <li>Aucune session trouvée.</li>
             <?php endif; ?>
-        </tbody>
-    </table>
+        </ul>
+
+        <h2>Ajouter une session</h2>
+        <form method="POST">
+            <!-- Champ pour le nom de la session -->
+            <label for="session_name">Nom :</label>
+            <input type="text" name="session_name" id="session_name" placeholder="Nom de la session"><br>
+
+            <!-- Bouton pour ajouter -->
+            <button type="submit" name="add_session">Ajouter</button>
+        </form>
+    </div>
 </body>
 
 </html>
