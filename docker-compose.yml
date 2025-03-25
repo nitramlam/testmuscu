@@ -1,8 +1,11 @@
+
 version: '3.8'
+
 services:
   mysql:
     image: mysql:latest
     container_name: mysql-muscu
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: muscu1234
       MYSQL_DATABASE: musculation_db
@@ -13,10 +16,12 @@ services:
       - ./SQL:/docker-entrypoint-initdb.d
     networks:
       - muscu-network
+    platform: linux/amd64 # Forcer l'architecture pour compatibilité avec ARM64
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin-muscu
+    restart: always
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
@@ -26,6 +31,24 @@ services:
       - muscu-network
     depends_on:
       - mysql
+    platform: linux/amd64 # Forcer l'architecture pour compatibilité avec ARM64
+
+  php-apache:
+    build:
+      context: .
+      dockerfile: php-apache.Dockerfile
+    container_name: php-muscu
+    restart: always
+    working_dir: /var/www/html
+    volumes:
+      - ./public:/var/www/html
+    ports:
+      - "8000:80"
+    networks:
+      - muscu-network
+    depends_on:
+      - mysql
+    platform: linux/amd64 # Forcer l'architecture pour compatibilité avec ARM64
 
 volumes:
   mysql-data:

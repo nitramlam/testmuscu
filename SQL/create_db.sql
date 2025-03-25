@@ -5,28 +5,28 @@ USE musculation_db;
 -- Table des utilisateurs
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    name VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255)
 );
 
 -- Table des jours
 CREATE TABLE IF NOT EXISTS days (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    day_name VARCHAR(255) NOT NULL
+    day_name VARCHAR(255)
 );
 
 -- Table des séances
 CREATE TABLE IF NOT EXISTS sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    session_name VARCHAR(255) NOT NULL
+    session_name VARCHAR(255)
 );
 
 -- Table des exercices
 CREATE TABLE IF NOT EXISTS exercises (
     id INT AUTO_INCREMENT PRIMARY KEY,
     session_id INT,
-    exercise_name VARCHAR(255) NOT NULL,
+    exercise_name VARCHAR(255),
     weight DECIMAL(10, 2),
     sets INT,
     reps INT,
