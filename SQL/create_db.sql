@@ -1,41 +1,52 @@
+-- Création de la base de données
 CREATE DATABASE IF NOT EXISTS musculation_db;
-
 USE musculation_db;
 
 -- Table des utilisateurs
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL
 );
 
--- Table des séances
-CREATE TABLE IF NOT EXISTS sessions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    session_name VARCHAR(255) NOT NULL,
+-- Table des sessions (chaque utilisateur a ses propres sessions)
+CREATE TABLE sessions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Table des exercices
-CREATE TABLE IF NOT EXISTS exercises (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+-- Table des exercices (chaque session contient plusieurs exercices)
+CREATE TABLE exercises (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     session_id INT NOT NULL,
-    exercise_name VARCHAR(255) NOT NULL,
-    weight DECIMAL(10, 2) DEFAULT 0,
-    sets INT DEFAULT 0,
-    reps INT DEFAULT 0,
-    objective_weight DECIMAL(10, 2) DEFAULT 0,
+    name VARCHAR(50) NOT NULL,
+    weight DECIMAL(5,2),
+    repetitions INT,
+    sets INT,
+    target_weight DECIMAL(5,2), -- Objectif de poids
     FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE
 );
 
--- Table intermédiaire pour lier plusieurs séances à un exercice
-CREATE TABLE IF NOT EXISTS exercise_sessions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    exercise_id INT NOT NULL,
-    session_id INT NOT NULL,
-    FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE,
-    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE
-);
+-- Ajout de quelques utilisateurs
+INSERT INTO users (name) VALUES ('Martin'), ('Olivia');
 
--- Insérer un utilisateur par défaut
-INSERT INTO users (name) VALUES ('John Doe');
+-- Ajout de sessions pour chaque utilisateur
+INSERT INTO sessions (user_id, name) VALUES
+(1, 'Bras'),
+(1, 'Jambes'),
+(2, 'Abdos'),
+(2, 'Jambes');
+
+-- Ajout d'exercices pour chaque session
+INSERT INTO exercises (session_id, name, weight, repetitions, sets, target_weight) VALUES
+-- Exercices pour Martin
+(1, 'Curl biceps', 12.5, 10, 3, 15.0),
+(1, 'Pompes', NULL, 15, 3, NULL),
+(2, 'Squat', 50, 10, 4, 60),
+(2, 'Presse', 80, 12, 3, 100),
+-- Exercices pour Olivia
+(3, 'Crunch', NULL, 20, 3, NULL),
+(3, 'Planche', NULL, 30, 3, NULL),
+(4, 'Fentes', 20, 12, 3, 25),
+(4, 'Presse', 60, 15, 3, 80);
