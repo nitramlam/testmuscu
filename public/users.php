@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // Informations de connexion à la base de données
 $host = 'mysql';
 $dbname = 'musculation_db';
@@ -49,6 +51,12 @@ try {
 } catch (PDOException $e) {
     echo "Erreur : " . $e->getMessage();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'])) {
+    $_SESSION['user_id'] = $_GET['user_id'];
+    header("Location: sessions.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -74,13 +82,34 @@ try {
 <body>
     <h1>Gestion des Utilisateurs</h1>
 
+    <!-- Formulaire pour sélectionner un utilisateur -->
+    <h2>Choisir un utilisateur</h2>
+    <form method="GET" action="users.php">
+        <label for="user_select">Sélectionnez un utilisateur :</label>
+        <select name="user_id" id="user_select" required>
+            <?php if (!empty($users)): ?>
+                <?php foreach ($users as $user): ?>
+                    <option value="<?= htmlspecialchars($user['id']) ?>">
+                        <?= htmlspecialchars($user['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <option disabled>Aucun utilisateur disponible</option>
+            <?php endif; ?>
+        </select>
+        <button type="submit">Accéder aux sessions</button>
+    </form>
+
     <!-- Liste des utilisateurs existants -->
     <h2>Liste des utilisateurs existants</h2>
     <ul>
         <?php if (!empty($users)): ?>
             <?php foreach ($users as $user): ?>
                 <li>
-                    <a href="#"><?= htmlspecialchars($user['name'] ?? '') ?></a>
+                    <!-- Lien pour accéder aux sessions de l'utilisateur -->
+                    <a href="users.php?user_id=<?= htmlspecialchars($user['id']) ?>">
+                        <?= htmlspecialchars($user['name'] ?? '') ?>
+                    </a>
                 </li>
             <?php endforeach; ?>
         <?php else: ?>
