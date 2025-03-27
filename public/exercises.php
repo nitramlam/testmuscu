@@ -49,10 +49,10 @@ $exercises = $pdo->query("SELECT * FROM exercises")->fetchAll();
     <h2>Ajouter un exercice</h2>
     <form method="post">
         <input type="text" name="name" placeholder="Nom de l'exercice" required>
-        <input type="number" name="weight" placeholder="Poids">
-        <input type="number" name="sets" placeholder="Séries">
-        <input type="number" name="reps" placeholder="Répétitions">
-        <input type="number" name="objective_weight" placeholder="Poids Objectif">
+        <input type="number" name="weight" placeholder="Poids" required>
+        <input type="number" name="sets" placeholder="Séries" required>
+        <input type="number" name="reps" placeholder="Répétitions" required>
+        <input type="number" name="objective_weight" placeholder="Poids Objectif" required>
         <label for="session_id">Session :</label>
         <select name="session_id" required>
             <option value="1">Bras</option>
@@ -90,10 +90,10 @@ $exercises = $pdo->query("SELECT * FROM exercises")->fetchAll();
                     <form method="post" style="display:inline;">
                         <input type="hidden" name="exercise_id" value="<?= $exercise['id'] ?>">
                         <input type="text" name="name" value="<?= htmlspecialchars($exercise['name'] ?? '') ?>" required>
-                        <input type="number" name="weight" value="<?= $exercise['weight'] ?>">
-                        <input type="number" name="sets" value="<?= $exercise['sets'] ?>">
-                        <input type="number" name="reps" value="<?= $exercise['repetitions'] ?>">
-                        <input type="number" name="objective_weight" value="<?= $exercise['target_weight'] ?>">
+                        <input type="number" name="weight" value="<?= $exercise['weight'] ?>" required>
+                        <input type="number" name="sets" value="<?= $exercise['sets'] ?>" required>
+                        <input type="number" name="reps" value="<?= $exercise['repetitions'] ?>" required>
+                        <input type="number" name="objective_weight" value="<?= $exercise['target_weight'] ?>" required>
                         <select name="session_id">
                             <option value="1" <?= $exercise['session_id'] == 1 ? 'selected' : '' ?>>Bras</option>
                             <option value="2" <?= $exercise['session_id'] == 2 ? 'selected' : '' ?>>Jambes</option>
