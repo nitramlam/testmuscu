@@ -1,16 +1,16 @@
 <?php
-// Informations de connexion à la base de données
-$host = 'mysql';
-$dbname = 'musculation_db';
-$username = 'root';
-$password = 'muscu1234';
+require 'db.php';
+
+// Vérification si la connexion à la BDD fonctionne bien
+if (!$pdo) {
+    die("Erreur de connexion à la base de données.");
+}
 
 try {
-    // Connexion à la base de données
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Récupérer l'ID de la session
+    // Vérification des variables globales
+    global $host, $dbname, $username, $password;
+    
+    // Récupérer l'ID de la session depuis l'URL
     $session_id = $_GET['session_id'] ?? null;
 
     if (!$session_id) {
@@ -32,7 +32,7 @@ try {
         }
 
         // Redirection pour éviter la duplication après rafraîchissement
-        header("Location: session_details.php?session_id=" . $session_id);
+        header("Location: add_exercise.php?session_id=" . $session_id);
         exit;
     }
 
@@ -50,7 +50,7 @@ try {
         }
 
         // Redirection pour éviter la duplication après rafraîchissement
-        header("Location: session_details.php?session_id=" . $session_id);
+        header("Location: add_exercise.php?session_id=" . $session_id);
         exit;
     }
 
@@ -80,7 +80,7 @@ try {
     $all_exercises = $pdo->query("SELECT id, exercise_name FROM exercises")->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
-    echo "Erreur : " . $e->getMessage();
+    echo "Erreur SQL : " . $e->getMessage();
 }
 ?>
 
