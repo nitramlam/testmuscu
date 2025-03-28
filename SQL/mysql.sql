@@ -20,7 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `musculation_db`
 --
-DROP DATABASE IF EXISTS `musculation_db`;
 CREATE DATABASE IF NOT EXISTS `musculation_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `musculation_db`;
 

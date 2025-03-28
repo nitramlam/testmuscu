@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql:3306
--- Généré le : ven. 28 mars 2025 à 11:51
+-- Généré le : jeu. 27 mars 2025 à 15:42
 -- Version du serveur : 9.2.0
 -- Version de PHP : 8.2.27
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `musculation_db`
 --
-DROP DATABASE IF EXISTS `musculation_db`;
-CREATE DATABASE IF NOT EXISTS `musculation_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `musculation_db`;
 
 -- --------------------------------------------------------
 
@@ -82,17 +79,16 @@ INSERT INTO `sessions` (`id`, `user_id`, `name`) VALUES
 CREATE TABLE `users` (
   `id` int NOT NULL,
   `name` varchar(50) NOT NULL,
-  `token` varchar(255) DEFAULT NULL,
-  `token_expiry` datetime DEFAULT NULL
+  `token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `token`, `token_expiry`) VALUES
-(1, 'Martin', '4c81aadceffef090090e6fd3457e8379', '2025-03-27 23:59:59'),
-(2, 'Olivia', 'ff77f51ff9083ee9fcec27e989844bfa', '2025-03-28 12:51:06');
+INSERT INTO `users` (`id`, `name`, `token`) VALUES
+(1, 'Martin', '4c81aadceffef090090e6fd3457e8379'),
+(2, 'Olivia', 'acb1dfa508671f720c5bbf4ded893f09');
 
 --
 -- Index pour les tables déchargées
