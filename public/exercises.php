@@ -1,11 +1,12 @@
 <?php
 require 'db.php'; // Inclusion du fichier de connexion à la base de données
+include 'header.php'; // Vérifie le token et récupère l'utilisateur connecté
 
 // Récupération de l'ID de la session en cours depuis l'URL
 $session_id = $_GET['session_id'] ?? null;
 
 if (!$session_id) {
-    die("Erreur : Aucun ID de session fourni.");
+    die("Erreur : Aucun ID de session fourni. Vérifiez l'URL.");
 }
 
 // Ajout d'un exercice
@@ -17,16 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_exercise'])) {
     $objective_weight = $_POST['objective_weight'] ?? 0;
 
     if (!empty($name)) {
-        $stmt = $pdo->prepare("INSERT INTO exercises (session_id, name, weight, sets, repetitions, target_weight) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$session_id, $name, $weight, $sets, $reps, $objective_weight]);
+        // Insérer l'exercice dans la base de données pour la session en cours et l'utilisateur connecté
+        $stmt = $pdo->prepare("INSERT INTO exercises (session_id, user_id, name, weight, sets, repetitions, target_weight) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$session_id, $user_id, $name, $weight, $sets, $reps, $objective_weight]);
     }
 }
 
 // Suppression d'un exercice
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_exercise'])) {
     $exercise_id = $_POST['exercise_id'] ?? 0;
-    $stmt = $pdo->prepare("DELETE FROM exercises WHERE id = ?");
-    $stmt->execute([$exercise_id]);
+    $stmt = $pdo->prepare("DELETE FROM exercises WHERE id = ? AND session_id = ?");
+    $stmt->execute([$exercise_id, $session_id]);
 }
 
 // Modification d'un exercice
@@ -38,20 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_exercise'])) {
     $reps = $_POST['reps'] ?? 0;
     $objective_weight = $_POST['objective_weight'] ?? 0;
 
-    $stmt = $pdo->prepare("UPDATE exercises SET name = ?, weight = ?, sets = ?, repetitions = ?, target_weight = ? WHERE id = ?");
-    $stmt->execute([$name, $weight, $sets, $reps, $objective_weight, $exercise_id]);
+    $stmt = $pdo->prepare("UPDATE exercises SET name = ?, weight = ?, sets = ?, repetitions = ?, target_weight = ? WHERE id = ? AND session_id = ?");
+    $stmt->execute([$name, $weight, $sets, $reps, $objective_weight, $exercise_id, $session_id]);
 }
 
 // Récupération des exercices pour la session en cours
 $stmt = $pdo->prepare("SELECT * FROM exercises WHERE session_id = ?");
 $stmt->execute([$session_id]);
-$exercises = $stmt->fetchAll();
+$exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Gestion des Exercices</title>
 </head>
+
 <body>
     <h2>Ajouter un exercice à la session en cours</h2>
     <form method="post">
@@ -99,4 +104,5 @@ $exercises = $stmt->fetchAll();
         <?php endforeach; ?>
     </table>
 </body>
+
 </html>

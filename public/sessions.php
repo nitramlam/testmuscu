@@ -1,36 +1,23 @@
 <?php
 require 'db.php';
+include 'header.php'; // Vérifie le token et récupère l'utilisateur connecté
 
-if (!isset($_GET['user_id'])) {
-    die("Utilisateur non sélectionné.");
-}
-
-$user_id = $_GET['user_id'];
-
-// Récupérer l'utilisateur
-$sql = "SELECT name FROM users WHERE id = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$user_id]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$user) {
-    die("Utilisateur introuvable.");
-}
-
-// Récupérer les sessions de l'utilisateur
+// Récupérer les sessions de l'utilisateur connecté via le token
 $sql = "SELECT * FROM sessions WHERE user_id = ?";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$user_id]);
+$stmt->execute([$user_id]); // $user_id est défini dans header.php
 $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Sessions de <?= htmlspecialchars($user['name']); ?></title>
+    <title>Sessions de <?= htmlspecialchars($user_name); ?></title>
 </head>
+
 <body>
-    <h2>Sessions de <?= htmlspecialchars($user['name']); ?></h2>
+    <h2>Sessions de <?= htmlspecialchars($user_name); ?></h2>
     <ul>
         <?php foreach ($sessions as $session): ?>
             <li>
@@ -41,4 +28,5 @@ $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endforeach; ?>
     </ul>
 </body>
+
 </html>
