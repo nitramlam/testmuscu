@@ -73,7 +73,7 @@ $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <button type="submit"
                         onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette session ?');">Supprimer</button>
                 </form>
-            </li>
+            </pa>
         <?php endforeach; ?>
     </ul>
 </body>

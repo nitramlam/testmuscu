@@ -1,5 +1,5 @@
 <?php
-require 'db.php'; // Inclusion du fichier de connexion à la base de données
+require 'db.php';
 include 'header.php'; // Vérifie le token et récupère l'utilisateur connecté
 
 // Récupération de l'ID de la session en cours depuis l'URL
@@ -9,43 +9,46 @@ if (!$session_id) {
     die("Erreur : Aucun ID de session fourni. Vérifiez l'URL.");
 }
 
-// Ajout d'un exercice
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_exercise'])) {
-    $name = $_POST['name'] ?? '';
+// Ajouter un exercice
+$message = '';
+$refresh = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['exercise_name'])) {
+    $exercise_name = trim($_POST['exercise_name']);
     $weight = $_POST['weight'] ?? 0;
     $sets = $_POST['sets'] ?? 0;
     $reps = $_POST['reps'] ?? 0;
     $objective_weight = $_POST['objective_weight'] ?? 0;
 
-    if (!empty($name)) {
-        // Insérer l'exercice dans la base de données pour la session en cours et l'utilisateur connecté
-        $stmt = $pdo->prepare("INSERT INTO exercises (session_id, user_id, name, weight, sets, repetitions, target_weight) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$session_id, $user_id, $name, $weight, $sets, $reps, $objective_weight]);
+    if (!empty($exercise_name)) {
+        $sql = "INSERT INTO exercises (session_id, user_id, name, weight, sets, repetitions, target_weight) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$session_id, $user_id, $exercise_name, $weight, $sets, $reps, $objective_weight]);
+        $message = "Exercice ajouté avec succès.";
+        $refresh = true;
+    } else {
+        $message = "Le nom de l'exercice ne peut pas être vide.";
     }
 }
 
-// Suppression d'un exercice
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_exercise'])) {
-    $exercise_id = $_POST['exercise_id'] ?? 0;
-    $stmt = $pdo->prepare("DELETE FROM exercises WHERE id = ? AND session_id = ?");
-    $stmt->execute([$exercise_id, $session_id]);
+// Supprimer un exercice
+if (isset($_POST['delete_exercise_id'])) {
+    $delete_exercise_id = (int) $_POST['delete_exercise_id'];
+    $sql = "DELETE FROM exercises WHERE id = ? AND session_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$delete_exercise_id, $session_id]);
+    $message = "Exercice supprimé avec succès.";
+    $refresh = true;
 }
 
-// Modification d'un exercice
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_exercise'])) {
-    $exercise_id = $_POST['exercise_id'] ?? 0;
-    $name = $_POST['name'] ?? '';
-    $weight = $_POST['weight'] ?? 0;
-    $sets = $_POST['sets'] ?? 0;
-    $reps = $_POST['reps'] ?? 0;
-    $objective_weight = $_POST['objective_weight'] ?? 0;
-
-    $stmt = $pdo->prepare("UPDATE exercises SET name = ?, weight = ?, sets = ?, repetitions = ?, target_weight = ? WHERE id = ? AND session_id = ?");
-    $stmt->execute([$name, $weight, $sets, $reps, $objective_weight, $exercise_id, $session_id]);
+// Rafraîchir la page après une action
+if ($refresh) {
+    echo '<script>window.location.href="exercises.php?session_id=' . htmlspecialchars($session_id) . '";</script>';
+    exit;
 }
 
-// Récupération des exercices pour la session en cours
-$stmt = $pdo->prepare("SELECT * FROM exercises WHERE session_id = ?");
+// Récupérer les exercices pour la session en cours
+$sql = "SELECT * FROM exercises WHERE session_id = ?";
+$stmt = $pdo->prepare($sql);
 $stmt->execute([$session_id]);
 $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -59,54 +62,41 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <h2>Ajouter un exercice à la session en cours</h2>
-    <form method="post">
-        <input type="text" name="name" placeholder="Nom de l'exercice" required>
+
+    <?php if (!empty($message)): ?>
+        <p><?= htmlspecialchars($message); ?></p>
+    <?php endif; ?>
+
+    <!-- Formulaire pour ajouter un exercice -->
+    <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>">
+        <input type="text" name="exercise_name" placeholder="Nom de l'exercice" required>
         <input type="number" name="weight" placeholder="Poids" required>
         <input type="number" name="sets" placeholder="Séries" required>
         <input type="number" name="reps" placeholder="Répétitions" required>
         <input type="number" name="objective_weight" placeholder="Poids Objectif" required>
-        <button type="submit" name="add_exercise">Ajouter</button>
+        <button type="submit">Ajouter</button>
     </form>
 
     <h2>Liste des exercices pour la session en cours</h2>
-    <table border="1">
-        <tr>
-            <th>Nom</th>
-            <th>Poids</th>
-            <th>Séries</th>
-            <th>Répétitions</th>
-            <th>Poids Objectif</th>
-            <th>Actions</th>
-        </tr>
+    <ul>
         <?php foreach ($exercises as $exercise): ?>
-            <tr>
-                <td><?= htmlspecialchars($exercise['name'] ?? 'Nom inconnu') ?></td>
-                <td><?= htmlspecialchars($exercise['weight'] ?? '0') ?></td>
-                <td><?= htmlspecialchars($exercise['sets'] ?? '0') ?></td>
-                <td><?= htmlspecialchars($exercise['repetitions'] ?? '0') ?></td>
-                <td><?= htmlspecialchars($exercise['target_weight'] ?? '0') ?></td>
-                <td>
-                    <form method="post" style="display:inline;">
-                        <input type="hidden" name="exercise_id" value="<?= $exercise['id'] ?>">
-                        <button type="submit" name="delete_exercise">Supprimer</button>
-                    </form>
-                    <form method="post" style="display:inline;">
-                        <input type="hidden" name="exercise_id" value="<?= $exercise['id'] ?>">
-                        <input type="text" name="name" value="<?= htmlspecialchars($exercise['name'] ?? '') ?>" required>
-                        <input type="number" name="weight" value="<?= $exercise['weight'] ?>" required>
-                        <input type="number" name="sets" value="<?= $exercise['sets'] ?>" required>
-                        <input type="number" name="reps" value="<?= $exercise['repetitions'] ?>" required>
-                        <input type="number" name="objective_weight" value="<?= $exercise['target_weight'] ?>" required>
-                        <button type="submit" name="update_exercise">Modifier</button>
-                    </form>
-                </td>
-            </tr>
+            <li>
+                <?= htmlspecialchars($exercise['name']); ?> (Poids : <?= htmlspecialchars($exercise['weight']); ?>, Séries :
+                <?= htmlspecialchars($exercise['sets']); ?>, Répétitions :
+                <?= htmlspecialchars($exercise['repetitions']); ?>, Poids Objectif :
+                <?= htmlspecialchars($exercise['target_weight']); ?>)
+                <!-- Formulaire pour supprimer un exercice -->
+                <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>"
+                    style="display:inline;">
+                    <input type="hidden" name="delete_exercise_id" value="<?= $exercise['id']; ?>">
+                    <button type="submit"
+                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet exercice ?');">Supprimer</button>
+                </form>
+            </li>
         <?php endforeach; ?>
-    </table>
+    </ul>
 
-    <a href="sessions.php?<?= $query_params ?>">session</a>
-
-
+    <a href="sessions.php">Retour aux sessions</a>
 </body>
 
 </html>
