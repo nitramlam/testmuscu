@@ -1,0 +1,53 @@
+h2 {
+  color: #333;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+form input[type="text"] {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+ul {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+ul li {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease;
+}
+
+ul li:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+ul li a {
+  font-weight: bold;
+  color: #007bff;
+}
+
+ul li form {
+  display: inline;
+}
+
+ul li button {
+  margin-left: 10px;
+}

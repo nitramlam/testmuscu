@@ -46,6 +46,10 @@ $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <title>Sessions de <?= htmlspecialchars($user_name); ?></title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/sessions.css">
+    <script src="js/global.js" defer></script>
+    <script src="js/sessions.js" defer></script>
 </head>
 
 <body>
@@ -73,8 +77,8 @@ $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <button type="submit"
                         onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette session ?');">Supprimer</button>
                 </form>
-            </pa>
-        <?php endforeach; ?>
+                </pa>
+            <?php endforeach; ?>
     </ul>
 </body>
 

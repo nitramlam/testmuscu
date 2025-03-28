@@ -40,6 +40,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <title>Gestion des Utilisateurs</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/manage_users.css">
+    <script src="js/global.js" defer></script>
 </head>
 
 <body>
@@ -65,7 +68,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </form>
                     <form method="post" style="display:inline;">
                         <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                        <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" maxlength="15" required>
+                        <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" maxlength="15"
+                            required>
                         <button type="submit" name="update_user">Modifier</button>
                     </form>
                 </td>
