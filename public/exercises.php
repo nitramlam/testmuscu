@@ -58,6 +58,15 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <title>Gestion des Exercices</title>
+    <script>
+        // Validation pour limiter les champs numériques à 3 chiffres
+        function validateNumericInput(event) {
+            const input = event.target;
+            if (input.value.length > 3) {
+                input.value = input.value.slice(0, 3);
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -69,11 +78,12 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Formulaire pour ajouter un exercice -->
     <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>">
-        <input type="text" name="exercise_name" placeholder="Nom de l'exercice" required>
-        <input type="number" name="weight" placeholder="Poids" required>
-        <input type="number" name="sets" placeholder="Séries" required>
-        <input type="number" name="reps" placeholder="Répétitions" required>
-        <input type="number" name="objective_weight" placeholder="Poids Objectif" required>
+        <input type="text" name="exercise_name" placeholder="Nom de l'exercice" maxlength="15" required>
+        <input type="number" name="weight" placeholder="Poids" required oninput="validateNumericInput(event)">
+        <input type="number" name="sets" placeholder="Séries" required oninput="validateNumericInput(event)">
+        <input type="number" name="reps" placeholder="Répétitions" required oninput="validateNumericInput(event)">
+        <input type="number" name="objective_weight" placeholder="Poids Objectif" required
+            oninput="validateNumericInput(event)">
         <button type="submit">Ajouter</button>
     </form>
 

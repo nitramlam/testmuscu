@@ -45,20 +45,18 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <h2>Ajouter un utilisateur</h2>
     <form method="post">
-        <input type="text" name="name" placeholder="Nom de l'utilisateur" required>
+        <input type="text" name="name" placeholder="Nom de l'utilisateur" maxlength="15" required>
         <button type="submit" name="add_user">Ajouter</button>
     </form>
 
     <h2>Liste des utilisateurs</h2>
     <table border="1">
         <tr>
-            <th>ID</th>
             <th>Nom</th>
             <th>Actions</th>
         </tr>
         <?php foreach ($users as $user): ?>
             <tr>
-                <td><?= htmlspecialchars($user['id']) ?></td>
                 <td><?= htmlspecialchars($user['name']) ?></td>
                 <td>
                     <form method="post" style="display:inline;">
@@ -67,7 +65,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </form>
                     <form method="post" style="display:inline;">
                         <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                        <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" required>
+                        <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" maxlength="15" required>
                         <button type="submit" name="update_user">Modifier</button>
                     </form>
                 </td>

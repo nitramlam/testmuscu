@@ -57,7 +57,7 @@ $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Formulaire pour ajouter une session -->
     <form method="POST" action="sessions.php">
-        <input type="text" name="session_name" placeholder="Nom de la session" required>
+        <input type="text" name="session_name" placeholder="Nom de la session" maxlength="15" required>
         <button type="submit">Ajouter</button>
     </form>
 
