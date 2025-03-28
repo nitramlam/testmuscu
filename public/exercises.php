@@ -103,6 +103,10 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tr>
         <?php endforeach; ?>
     </table>
+
+    <a href="sessions.php?<?= $query_params ?>">session</a>
+
+
 </body>
 
 </html>

@@ -74,9 +74,7 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
 
 <body>
     <nav>
-        <a href="index.php?<?= $query_params ?>">Accueil</a>
-        <a href="sessions.php?<?= $query_params ?>">Sessions</a>
-        <a href="exercises.php?<?= $query_params ?>">Exercices</a>
+        <a href="manage_users.php?<?= $query_params ?>">user</a>
         <a href="index.php">Déconnexion</a>
     </nav>
 </body>
