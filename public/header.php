@@ -51,17 +51,34 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Programme Salle de Sport</title>
 
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <nav>
-        <a href="manage_users.php?<?= $query_params ?>">user</a>
-        <a href="sessions.php?<?= $query_params ?>">sessions</a>
-        <a href="index.php">Déconnexion</a>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+    <!-- Navigation -->
+    <nav class="bg-blue-600 p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="text-white text-2xl font-semibold">
+                <span class="font-bold">Bienvenue</span> <?= htmlspecialchars($user_name); ?>
+            </div>
+
+            <div class="space-x-6">
+                <a href="manage_users.php?<?= $query_params ?>" class="text-white hover:text-blue-300 transition duration-300">Utilisateurs</a>
+                <a href="sessions.php?<?= $query_params ?>" class="text-white hover:text-blue-300 transition duration-300">Sessions</a>
+                <a href="index.php" class="text-white hover:text-blue-300 transition duration-300">Déconnexion</a>
+            </div>
+        </div>
     </nav>
+
+    <!-- Contenu principal de la page -->
+    <div class="container mx-auto p-8">
+        <!-- Page content here -->
+    </div>
+
 </body>
 
 </html>

@@ -42,41 +42,55 @@ $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sessions de <?= htmlspecialchars($user_name); ?></title>
-
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <h2>Sessions de <?= htmlspecialchars($user_name); ?></h2>
+<body class="bg-gray-100 text-gray-900 font-sans">
 
-    <?php if (!empty($message)): ?>
-        <p><?= htmlspecialchars($message); ?></p>
-    <?php endif; ?>
+    <div class="max-w-4xl mx-auto mt-12 p-8 bg-white shadow-lg rounded-lg">
+        <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">Sessions de <?= htmlspecialchars($user_name); ?></h2>
 
-    <!-- Formulaire pour ajouter une session -->
-    <form method="POST" action="sessions.php">
-        <input type="text" name="session_name" placeholder="Nom de la session" maxlength="15" required>
-        <button type="submit">Ajouter</button>
-    </form>
+        <?php if (!empty($message)): ?>
+            <p class="text-center text-red-500 mb-6"><?= htmlspecialchars($message); ?></p>
+        <?php endif; ?>
 
-    <ul>
-        <?php foreach ($sessions as $session): ?>
-            <li>
-                <a href="exercises.php?session_id=<?= $session['id']; ?>">
-                    <?= htmlspecialchars($session['name']); ?>
-                </a>
-                <!-- Formulaire pour supprimer une session -->
-                <form method="POST" action="sessions.php" style="display:inline;">
-                    <input type="hidden" name="delete_session_id" value="<?= $session['id']; ?>">
-                    <button type="submit"
-                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette session ?');">Supprimer</button>
-                </form>
-                </pa>
+        <!-- Formulaire pour ajouter une session -->
+        <form method="POST" action="sessions.php" class="mb-6">
+            <div class="flex flex-col items-center">
+                <input type="text" name="session_name" placeholder="Nom de la session" maxlength="15" required
+                    class="p-3 border border-gray-300 rounded-lg w-72 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit"
+                    class="bg-blue-500 text-white p-3 rounded-lg w-72 hover:bg-blue-600 transition duration-300">Ajouter</button>
+            </div>
+        </form>
+
+        <!-- Liste des sessions -->
+        <ul class="space-y-4">
+            <?php foreach ($sessions as $session): ?>
+                <li class="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-md">
+                    <a href="exercises.php?session_id=<?= $session['id']; ?>" class="text-lg font-medium text-blue-600 hover:underline">
+                        <?= htmlspecialchars($session['name']); ?>
+                    </a>
+                    <!-- Formulaire pour supprimer une session -->
+                    <form method="POST" action="sessions.php" style="display:inline;">
+                        <input type="hidden" name="delete_session_id" value="<?= $session['id']; ?>">
+                        <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette session ?');"
+                            class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition duration-300">
+                            Supprimer
+                        </button>
+                    </form>
+                </li>
             <?php endforeach; ?>
-    </ul>
+        </ul>
+    </div>
+
 </body>
 
 </html>

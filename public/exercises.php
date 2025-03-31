@@ -67,46 +67,85 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         }
     </script>
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <h2>Ajouter un exercice à la session en cours</h2>
+<body class="bg-gray-50 text-gray-900 font-sans">
 
-    <?php if (!empty($message)): ?>
-        <p><?= htmlspecialchars($message); ?></p>
-    <?php endif; ?>
+    <div class="max-w-4xl mx-auto p-8">
 
-    <!-- Formulaire pour ajouter un exercice -->
-    <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>">
-        <input type="text" name="exercise_name" placeholder="Nom de l'exercice" maxlength="15" required>
-        <input type="number" name="weight" placeholder="Poids" required oninput="validateNumericInput(event)">
-        <input type="number" name="sets" placeholder="Séries" required oninput="validateNumericInput(event)">
-        <input type="number" name="reps" placeholder="Répétitions" required oninput="validateNumericInput(event)">
-        <input type="number" name="objective_weight" placeholder="Poids Objectif" required
-            oninput="validateNumericInput(event)">
-        <button type="submit">Ajouter</button>
-    </form>
+        <h2 class="text-2xl font-semibold mb-4">Ajouter un exercice à la session en cours</h2>
 
-    <h2>Liste des exercices pour la session en cours</h2>
-    <ul>
-        <?php foreach ($exercises as $exercise): ?>
-            <li>
-                <?= htmlspecialchars($exercise['name']); ?> (Poids : <?= htmlspecialchars($exercise['weight']); ?>, Séries :
-                <?= htmlspecialchars($exercise['sets']); ?>, Répétitions :
-                <?= htmlspecialchars($exercise['repetitions']); ?>, Poids Objectif :
-                <?= htmlspecialchars($exercise['target_weight']); ?>)
-                <!-- Formulaire pour supprimer un exercice -->
+        <?php if (!empty($message)): ?>
+            <p class="text-green-500"><?= htmlspecialchars($message); ?></p>
+        <?php endif; ?>
+
+        <!-- Formulaire pour ajouter un exercice -->
+        <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>"
+            class="space-y-4">
+            <input type="text" name="exercise_name" placeholder="Nom de l'exercice" maxlength="15" required
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="number" name="weight" placeholder="Poids" required oninput="validateNumericInput(event)"
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="number" name="sets" placeholder="Séries" required oninput="validateNumericInput(event)"
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="number" name="reps" placeholder="Répétitions" required oninput="validateNumericInput(event)"
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="number" name="objective_weight" placeholder="Poids Objectif" required
+                oninput="validateNumericInput(event)"
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                Ajouter
+            </button>
+        </form>
+
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Liste des exercices pour la session en cours</h2>
+
+        <ul class="space-y-4">
+    <?php foreach ($exercises as $exercise): ?>
+        <li class="p-4 border border-gray-300 rounded-md shadow-sm">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="font-semibold"><?= htmlspecialchars($exercise['name']); ?></p>
+                    <table class="mt-2">
+                        <tr>
+                            <td class="font-semibold">Poids :</td>
+                            <td class="text-blue-600"><?= htmlspecialchars($exercise['weight']); ?> kg</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Séries :</td>
+                            <td class="text-blue-600"><?= htmlspecialchars($exercise['sets']); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Répétitions :</td>
+                            <td class="text-blue-600"><?= htmlspecialchars($exercise['repetitions']); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Poids Objectif :</td>
+                            <td class="text-blue-600"><?= htmlspecialchars($exercise['target_weight']); ?> kg</td>
+                        </tr>
+                    </table>
+                </div>
                 <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>"
-                    style="display:inline;">
+                    class="inline-block">
                     <input type="hidden" name="delete_exercise_id" value="<?= $exercise['id']; ?>">
                     <button type="submit"
-                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet exercice ?');">Supprimer</button>
+                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet exercice ?');"
+                        class="bg-red-600 text-white py-1 px-4 rounded-md hover:bg-red-700 transition sm:py-1 sm:px-3 sm:text-sm">
+                        Supprimer
+                    </button>
                 </form>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+            </div>
+        </li>
+    <?php endforeach; ?>
+</ul>
 
-    <a href="sessions.php">Retour aux sessions</a>
+        <a href="sessions.php"
+            class="mt-8 inline-block text-blue-600 hover:text-blue-800 font-semibold transition duration-300">Retour aux sessions</a>
+
+    </div>
+
 </body>
 
 </html>
