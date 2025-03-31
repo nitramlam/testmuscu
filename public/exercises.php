@@ -58,10 +58,6 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <title>Gestion des Exercices</title>
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/exercises.css">
-    <script src="../js/global.js" defer></script>
-    <script src="../js/exercises.js" defer></script>
     <script>
         // Validation pour limiter les champs numériques à 3 chiffres
         function validateNumericInput(event) {

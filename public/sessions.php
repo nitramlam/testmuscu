@@ -46,10 +46,7 @@ $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <title>Sessions de <?= htmlspecialchars($user_name); ?></title>
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/sessions.css">
-    <script src="js/global.js" defer></script>
-    <script src="js/sessions.js" defer></script>
+
 </head>
 
 <body>

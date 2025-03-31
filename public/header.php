@@ -51,28 +51,9 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/header.css">
-    <script src="js/global.js" defer></script>
+
     <title>Programme Salle de Sport</title>
-    <style>
-        nav {
-            border-bottom: 1px solid #ddd;
-            background-color: #f4f4f4;
-            padding: 10px;
-        }
 
-        nav a {
-            color: #333;
-            margin-right: 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        nav a:hover {
-            color: #007BFF;
-        }
-    </style>
 </head>
 
 <body>
