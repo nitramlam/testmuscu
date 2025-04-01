@@ -1,5 +1,5 @@
 <?php
-require 'db.php'; // Inclusion du fichier de connexion à la base de données
+
 include 'header.php'; // Vérifie le token et récupère l'utilisateur connecté
 
 // Ajout d'un utilisateur

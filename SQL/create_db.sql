@@ -1,4 +1,3 @@
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -36,11 +35,11 @@ INSERT INTO `users` (`id`, `name`, `token`, `token_expiry`) VALUES
 
 CREATE TABLE `sessions` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `sessions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `sessions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -51,7 +50,7 @@ CREATE TABLE `sessions` (
 
 CREATE TABLE `exercises` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `session_id` int NOT NULL,
+  `session_id` int DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `weight` decimal(5,2) DEFAULT NULL,
   `repetitions` int DEFAULT NULL,
@@ -59,7 +58,24 @@ CREATE TABLE `exercises` (
   `target_weight` decimal(5,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `session_id` (`session_id`),
-  CONSTRAINT `exercises_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`) ON DELETE CASCADE
+  CONSTRAINT `exercises_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `exercises_sessions`
+--
+
+CREATE TABLE `exercises_sessions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `exercise_id` int DEFAULT NULL,
+  `session_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `exercise_id` (`exercise_id`),
+  KEY `session_id` (`session_id`),
+  CONSTRAINT `exercises_sessions_ibfk_1` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `exercises_sessions_ibfk_2` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 COMMIT;

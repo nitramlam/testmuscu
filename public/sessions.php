@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+
 include 'header.php'; // Vérifie le token et récupère l'utilisateur connecté
 
 // Ajouter une session

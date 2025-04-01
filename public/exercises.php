@@ -1,5 +1,4 @@
 <?php
-require 'db.php';
 include 'header.php'; // Vérifie le token et récupère l'utilisateur connecté
 
 // Récupération de l'ID de la session en cours depuis l'URL
@@ -8,6 +7,18 @@ $session_id = $_GET['session_id'] ?? null;
 if (!$session_id) {
     die("Erreur : Aucun ID de session fourni. Vérifiez l'URL.");
 }
+
+// Récupérer le nom de la session
+$sql = "SELECT name FROM sessions WHERE id = ?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$session_id]);
+$session = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$session) {
+    die("Erreur : Session introuvable.");
+}
+
+$session_name = $session['name'];
 
 // Ajouter un exercice
 $message = '';
@@ -114,7 +125,8 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="max-w-4xl mx-auto p-8">
 
-        <h2 class="text-2xl font-semibold mb-4">Ajouter un exercice à la session en cours</h2>
+        <h2 class="text-2xl font-semibold mb-4">Ajouter un exercice à la session <?= htmlspecialchars($session_name); ?>
+        </h2>
 
         <?php if (!empty($message)): ?>
             <p class="text-green-500"><?= htmlspecialchars($message); ?></p>
