@@ -4,7 +4,8 @@ session_start(); // Démarrage de la session
 require 'db.php'; // Connexion à la base de données
 
 if (!isset($_SESSION['token'])) {
-    die("Erreur : Aucun utilisateur connecté.");
+    header("Location: index.php");
+    exit;
 }
 
 $token = $_SESSION['token'];
@@ -16,14 +17,16 @@ $stmt->execute([$token]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
-    die("Erreur : Utilisateur non trouvé ou token invalide.");
+    header("Location: index.php");
+    exit;
 }
 
 // Vérifier si le token a expiré
 if (empty($user['token_expiry']) || strtotime($user['token_expiry']) < time()) {
     // Détruire la session si le token a expiré
     session_destroy();
-    die("Erreur : Token expiré. Veuillez vous reconnecter.");
+    header("Location: index.php");
+    exit;
 }
 
 // Stocker les informations de l'utilisateur dans des variables globales
@@ -67,8 +70,10 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
             </div>
 
             <div class="space-x-6">
-                <a href="manage_users.php?<?= $query_params ?>" class="text-white hover:text-blue-300 transition duration-300">Utilisateurs</a>
-                <a href="sessions.php?<?= $query_params ?>" class="text-white hover:text-blue-300 transition duration-300">Sessions</a>
+                <a href="manage_users.php?<?= $query_params ?>"
+                    class="text-white hover:text-blue-300 transition duration-300">Utilisateurs</a>
+                <a href="sessions.php?<?= $query_params ?>"
+                    class="text-white hover:text-blue-300 transition duration-300">Sessions</a>
                 <a href="index.php" class="text-white hover:text-blue-300 transition duration-300">Déconnexion</a>
             </div>
         </div>

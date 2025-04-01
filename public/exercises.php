@@ -40,6 +40,21 @@ if (isset($_POST['delete_exercise_id'])) {
     $refresh = true;
 }
 
+// Traitement de la mise à jour des exercices
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_exercise_id'])) {
+    $update_exercise_id = (int) $_POST['update_exercise_id'];
+    $weight = $_POST['weight'] ?? 0;
+    $sets = $_POST['sets'] ?? 0;
+    $reps = $_POST['reps'] ?? 0;
+    $objective_weight = $_POST['objective_weight'] ?? 0;
+
+    $sql = "UPDATE exercises SET weight = ?, sets = ?, repetitions = ?, target_weight = ? WHERE id = ? AND session_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$weight, $sets, $reps, $objective_weight, $update_exercise_id, $session_id]);
+    $message = "Exercice mis à jour avec succès.";
+    $refresh = true;
+}
+
 // Rafraîchir la page après une action
 if ($refresh) {
     echo '<script>window.location.href="exercises.php?session_id=' . htmlspecialchars($session_id) . '";</script>';
@@ -66,6 +81,30 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 input.value = input.value.slice(0, 3);
             }
         }
+
+        // Permet de transformer un élément en champ éditable
+        function makeEditable(element, tickElement) {
+            const currentValue = element.textContent.trim();
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentValue;
+            input.maxLength = 3;
+            input.className = "w-16 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
+            input.oninput = validateNumericInput;
+
+            input.onblur = function () {
+                element.textContent = input.value || currentValue;
+                element.dataset.value = input.value || currentValue;
+                element.nextElementSibling.value = input.value || currentValue; // Met à jour la valeur cachée
+                tickElement.style.display = "none"; // Cache le tick
+                element.onclick = () => makeEditable(element, tickElement);
+            };
+
+            element.textContent = '';
+            element.appendChild(input);
+            input.focus();
+            tickElement.style.display = "inline"; // Affiche le tick
+        }
     </script>
     <!-- CDN de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -82,8 +121,7 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <!-- Formulaire pour ajouter un exercice -->
-        <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>"
-            class="space-y-4">
+        <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>" class="space-y-4">
             <input type="text" name="exercise_name" placeholder="Nom de l'exercice" maxlength="15" required
                 class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <input type="number" name="weight" placeholder="Poids" required oninput="validateNumericInput(event)"
@@ -103,46 +141,90 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2 class="text-2xl font-semibold mt-8 mb-4">Liste des exercices pour la session en cours</h2>
 
         <ul class="space-y-4">
-    <?php foreach ($exercises as $exercise): ?>
-        <li class="p-4 border border-gray-300 rounded-md shadow-sm">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="font-semibold"><?= htmlspecialchars($exercise['name']); ?></p>
-                    <table class="mt-2">
-                        <tr>
-                            <td class="font-semibold">Poids :</td>
-                            <td class="text-blue-600"><?= htmlspecialchars($exercise['weight']); ?> kg</td>
-                        </tr>
-                        <tr>
-                            <td class="font-semibold">Séries :</td>
-                            <td class="text-blue-600"><?= htmlspecialchars($exercise['sets']); ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-semibold">Répétitions :</td>
-                            <td class="text-blue-600"><?= htmlspecialchars($exercise['repetitions']); ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-semibold">Poids Objectif :</td>
-                            <td class="text-blue-600"><?= htmlspecialchars($exercise['target_weight']); ?> kg</td>
-                        </tr>
-                    </table>
-                </div>
-                <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>"
-                    class="inline-block">
-                    <input type="hidden" name="delete_exercise_id" value="<?= $exercise['id']; ?>">
-                    <button type="submit"
-                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet exercice ?');"
-                        class="bg-red-600 text-white py-1 px-4 rounded-md hover:bg-red-700 transition sm:py-1 sm:px-3 sm:text-sm">
-                        Supprimer
-                    </button>
-                </form>
-            </div>
-        </li>
-    <?php endforeach; ?>
-</ul>
+            <?php foreach ($exercises as $exercise): ?>
+                <li class="p-4 border border-gray-300 rounded-md shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold"><?= htmlspecialchars($exercise['name']); ?></p>
+                            <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>"
+                                class="mt-2 space-y-2">
+                                <input type="hidden" name="update_exercise_id" value="<?= $exercise['id']; ?>">
+                                <table>
+                                    <tr>
+                                        <td class="font-semibold">Poids :</td>
+                                        <td>
+                                            <span class="editable"
+                                                data-value="<?= htmlspecialchars($exercise['weight']); ?>"
+                                                onclick="makeEditable(this, this.nextElementSibling.nextElementSibling)">
+                                                <?= htmlspecialchars($exercise['weight']); ?>
+                                            </span> kg
+                                            <input type="hidden" name="weight"
+                                                value="<?= htmlspecialchars($exercise['weight']); ?>">
+                                            <span class="text-green-600 cursor-pointer ml-2 hidden"
+                                                onclick="this.closest('form').submit()">✔</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">Séries :</td>
+                                        <td>
+                                            <span class="editable" data-value="<?= htmlspecialchars($exercise['sets']); ?>"
+                                                onclick="makeEditable(this, this.nextElementSibling.nextElementSibling)">
+                                                <?= htmlspecialchars($exercise['sets']); ?>
+                                            </span>
+                                            <input type="hidden" name="sets"
+                                                value="<?= htmlspecialchars($exercise['sets']); ?>">
+                                            <span class="text-green-600 cursor-pointer ml-2 hidden"
+                                                onclick="this.closest('form').submit()">✔</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">Répétitions :</td>
+                                        <td>
+                                            <span class="editable"
+                                                data-value="<?= htmlspecialchars($exercise['repetitions']); ?>"
+                                                onclick="makeEditable(this, this.nextElementSibling.nextElementSibling)">
+                                                <?= htmlspecialchars($exercise['repetitions']); ?>
+                                            </span>
+                                            <input type="hidden" name="reps"
+                                                value="<?= htmlspecialchars($exercise['repetitions']); ?>">
+                                            <span class="text-green-600 cursor-pointer ml-2 hidden"
+                                                onclick="this.closest('form').submit()">✔</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">Poids Objectif :</td>
+                                        <td>
+                                            <span class="editable"
+                                                data-value="<?= htmlspecialchars($exercise['target_weight']); ?>"
+                                                onclick="makeEditable(this, this.nextElementSibling.nextElementSibling)">
+                                                <?= htmlspecialchars($exercise['target_weight']); ?>
+                                            </span> kg
+                                            <input type="hidden" name="objective_weight"
+                                                value="<?= htmlspecialchars($exercise['target_weight']); ?>">
+                                            <span class="text-green-600 cursor-pointer ml-2 hidden"
+                                                onclick="this.closest('form').submit()">✔</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                        <form method="POST" action="exercises.php?session_id=<?= htmlspecialchars($session_id); ?>"
+                            class="inline-block">
+                            <input type="hidden" name="delete_exercise_id" value="<?= $exercise['id']; ?>">
+                            <button type="submit"
+                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet exercice ?');"
+                                class="bg-red-600 text-white py-1 px-4 rounded-md hover:bg-red-700 transition sm:py-1 sm:px-3 sm:text-sm">
+                                Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
 
         <a href="sessions.php"
-            class="mt-8 inline-block text-blue-600 hover:text-blue-800 font-semibold transition duration-300">Retour aux sessions</a>
+            class="mt-8 inline-block text-blue-600 hover:text-blue-800 font-semibold transition duration-300">Retour aux
+            sessions</a>
 
     </div>
 
