@@ -1,7 +1,7 @@
 <?php
-session_start(); // Démarrage de la session
+session_start(); 
 
-require 'db.php'; // Connexion à la base de données
+require 'db.php'; 
 
 if (!isset($_SESSION['token'])) {
     header("Location: index.php");
