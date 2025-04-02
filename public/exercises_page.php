@@ -47,9 +47,9 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Récupérer les exercices par utilisateur
+// Récupérer les exercices par utilisateur AVEC le nom de session
 $sql = "
-    SELECT u.name AS user_name, e.name AS exercise_name
+    SELECT u.name AS user_name, e.name AS exercise_name, s.name AS session_name
     FROM exercises_sessions es
     JOIN exercises e ON es.exercise_id = e.id
     JOIN sessions s ON es.session_id = s.id
@@ -118,7 +118,10 @@ $exercises_by_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo "<ul class='list-disc ml-6'>";
                 endif;
             ?>
-                <li><?= htmlspecialchars($exercise['exercise_name']); ?></li>
+                <li>
+                    <?= htmlspecialchars($exercise['exercise_name']) ?>
+                    <span class="text-gray-500 text-sm">(<?= htmlspecialchars($exercise['session_name']) ?>)</span>
+                </li>
             <?php endforeach; ?>
             </ul> <!-- Fermer la dernière liste -->
         </div>
@@ -127,4 +130,4 @@ $exercises_by_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 
-</html> 
+</html>
