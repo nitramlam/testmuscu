@@ -127,4 +127,4 @@ $exercises_by_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 
-</html>
+</html> 
