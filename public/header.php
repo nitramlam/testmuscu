@@ -74,8 +74,9 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
                     class="text-white hover:text-blue-300 transition duration-300">Utilisateurs</a>
                 <a href="sessions.php?<?= $query_params ?>"
                     class="text-white hover:text-blue-300 transition duration-300">Sessions</a>
-                <a href="index.php" class="text-white hover:text-blue-300 transition duration-300">Déconnexion</a>
-                <a href="exercises_page.php" class="text-white hover:text-blue-300 transition duration-300">exercices</a>
+                    <a href="exercises_page.php" class="text-white hover:text-blue-300 transition duration-300">Exercices</a>
+                <a href="index.php" class="text-orange hover:text-blue-300 transition duration-300">Déconnexion</a>
+                
             </div>
         </div>
     </nav>

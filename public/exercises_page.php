@@ -84,20 +84,23 @@ $exercises_by_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <form method="POST" action="" class="mb-6">
             <div class="flex flex-col items-center">
                 <!-- Champ pour créer un nouvel exercice -->
-                <input type="text" name="new_exercise_name" placeholder="Nom du nouvel exercice" maxlength="50" class="p-3 border border-gray-300 rounded-lg w-72 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="new_exercise_name" placeholder="Nom du nouvel exercice" maxlength="50"
+                    class="p-3 border border-gray-300 rounded-lg w-72 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                 <!-- Liste des sessions avec cases à cocher et noms des utilisateurs -->
-                <div class="space-y-2 mb-4">
+                <div class="w-full max-w-md space-y-2 mb-4">
                     <?php foreach ($sessions as $session): ?>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="sessions[]" value="<?= $session['id']; ?>" class="mr-2">
-                            <?= htmlspecialchars($session['name']); ?> - <span class="text-gray-500"><?= htmlspecialchars($session['user_name']); ?></span>
+                        <label class="flex items-center gap-2 text-gray-700">
+                            <input type="checkbox" name="sessions[]" value="<?= $session['id']; ?>" class="accent-blue-500">
+                            <span><?= htmlspecialchars($session['name']); ?> - <span
+                                    class="text-gray-500"><?= htmlspecialchars($session['user_name']); ?></span></span>
                         </label>
                     <?php endforeach; ?>
                 </div>
 
                 <button type="submit"
-                    class="bg-blue-500 text-white p-3 rounded-lg w-72 hover:bg-blue-600 transition duration-300">Ajouter l'Exercice</button>
+                    class="bg-blue-500 text-white p-3 rounded-lg w-72 hover:bg-blue-600 transition duration-300">Ajouter
+                    l'Exercice</button>
             </div>
         </form>
 
@@ -105,9 +108,9 @@ $exercises_by_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="mt-8">
             <h3 class="text-2xl font-semibold text-gray-800 mb-4">Exercices par Utilisateur</h3>
 
-            <?php 
+            <?php
             $current_user = '';
-            foreach ($exercises_by_user as $exercise): 
+            foreach ($exercises_by_user as $exercise):
                 // Afficher un nouveau groupe d'exercices pour chaque utilisateur
                 if ($current_user !== $exercise['user_name']):
                     if ($current_user !== '') {
@@ -117,7 +120,7 @@ $exercises_by_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo "<h4 class='text-xl font-semibold text-gray-800 mt-4'>" . htmlspecialchars($current_user) . "</h4>";
                     echo "<ul class='list-disc ml-6'>";
                 endif;
-            ?>
+                ?>
                 <li>
                     <?= htmlspecialchars($exercise['exercise_name']) ?>
                     <span class="text-gray-500 text-sm">(<?= htmlspecialchars($exercise['session_name']) ?>)</span>
