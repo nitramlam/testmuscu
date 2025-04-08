@@ -31,7 +31,6 @@ if (isset($_POST['update'])) {
     $stmt->execute([$weight, $repetitions, $sets, $target_weight, $exercise_session_id]);
 
     // Confirmation et retour
-   
     exit();
 }
 ?>
@@ -55,7 +54,7 @@ if (isset($_POST['update'])) {
 <body class="bg-gray-100">
 
     <div class="max-w-4xl mx-auto mt-8 p-6 bg-white rounded-lg shadow">
-        <h1 class="text-2xl font-bold mb-4">Exercices</h1>
+        <h1 class="text-2xl font-bold mb-6 text-center">Exercices</h1>
 
         <?php
         // 4. Affichage des exercices
@@ -71,38 +70,40 @@ if (isset($_POST['update'])) {
         $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($exercises)): ?>
-            <p class="text-gray-500">Aucun exercice dans cette session</p>
+            <p class="text-gray-500 text-center">Aucun exercice dans cette session</p>
         <?php else:
             foreach ($exercises as $ex): ?>
-                <div class="p-3 border-b">
-                    <h3 class="font-bold"><?= htmlspecialchars($ex['name']) ?></h3>
-                    <p>Poids : <?= htmlspecialchars($ex['weight']) ?> kg</p>
-                    <p>Répétitions : <?= htmlspecialchars($ex['repetitions']) ?></p>
-                    <p>Séries : <?= htmlspecialchars($ex['sets']) ?></p>
-                    <p>Objectif de poids : <?= htmlspecialchars($ex['target_weight']) ?> kg</p>
+                <div class="p-6 mb-6 bg-gray-50 border border-gray-200 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-2"><?= htmlspecialchars($ex['name']) ?></h3>
 
-                    <!-- Formulaire de modification -->
-                    <form action="exercises.php?session_id=<?= $session_id ?>" method="POST" class="mt-4">
+                    <form action="exercises.php?session_id=<?= $session_id ?>" method="POST" class="space-y-4">
                         <input type="hidden" name="exercise_session_id" value="<?= $ex['exercise_session_id'] ?>">
 
-                        <label for="weight" class="block">Poids (kg)</label>
-                        <input type="number" name="weight" value="<?= $ex['weight'] ?>" class="border p-2 mb-2 w-full" required />
+                        <div>
+                            <label for="weight" class="block text-lg font-medium text-gray-700">Poids (kg)</label>
+                            <input type="number" name="weight" value="<?= $ex['weight'] ?>" max="999" class="border border-gray-300 rounded-lg p-2 w-full" required />
+                        </div>
 
-                        <label for="repetitions" class="block">Répétitions</label>
-                        <input type="number" name="repetitions" value="<?= $ex['repetitions'] ?>" class="border p-2 mb-2 w-full" required />
+                        <div>
+                            <label for="repetitions" class="block text-lg font-medium text-gray-700">Répétitions</label>
+                            <input type="number" name="repetitions" value="<?= $ex['repetitions'] ?>" max="999" class="border border-gray-300 rounded-lg p-2 w-full" required />
+                        </div>
 
-                        <label for="sets" class="block">Séries</label>
-                        <input type="number" name="sets" value="<?= $ex['sets'] ?>" class="border p-2 mb-2 w-full" required />
+                        <div>
+                            <label for="sets" class="block text-lg font-medium text-gray-700">Séries</label>
+                            <input type="number" name="sets" value="<?= $ex['sets'] ?>" max="999" class="border border-gray-300 rounded-lg p-2 w-full" required />
+                        </div>
 
-                        <label for="target_weight" class="block">Objectif de poids (kg)</label>
-                        <input type="number" name="target_weight" value="<?= $ex['target_weight'] ?>" class="border p-2 mb-2 w-full" required />
+                        <div>
+                            <label for="target_weight" class="block text-lg font-medium text-gray-700">Objectif de poids (kg)</label>
+                            <input type="number" name="target_weight" value="<?= $ex['target_weight'] ?>" max="999" class="border border-gray-300 rounded-lg p-2 w-full" required />
+                        </div>
 
-                        <button type="submit" name="update" class="bg-blue-500 text-white p-2 rounded mt-4">Mettre à jour</button>
+                        <div class="flex justify-between items-center">
+                            <button type="submit" name="update" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">Mettre à jour</button>
+                            <button type="button" onclick="supprimerExercise(<?= $ex['id'] ?>)" class="text-red-500 hover:text-red-700">Supprimer</button>
+                        </div>
                     </form>
-
-                    <button onclick="supprimerExercise(<?= $ex['id'] ?>)" class="text-red-500 hover:text-red-700 mt-2">
-                        × Supprimer
-                    </button>
                 </div>
             <?php endforeach;
         endif; ?>
