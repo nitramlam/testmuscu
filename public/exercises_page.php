@@ -84,7 +84,7 @@ $exercises_by_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <form method="POST" action="" class="mb-6">
             <div class="flex flex-col items-center">
                 <!-- Champ pour créer un nouvel exercice -->
-                <input type="text" name="new_exercise_name" placeholder="Nom du nouvel exercice" maxlength="50"
+                <input type="text" name="new_exercise_name" placeholder="Nom du nouvel exercice" maxlength="15"
                     class="p-3 border border-gray-300 rounded-lg w-72 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                 <!-- Liste des sessions avec cases à cocher et noms des utilisateurs -->

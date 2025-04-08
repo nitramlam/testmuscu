@@ -37,7 +37,6 @@ CREATE TABLE `sessions` (
 -- --------------------------------------------------------
 
 -- Table `exercises`
--- Table `exercises`
 CREATE TABLE `exercises` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,

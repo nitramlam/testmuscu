@@ -51,82 +51,21 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Sélection d'un utilisateur</title>
     <!-- CDN de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Personnalisation du formulaire */
-        .form-container {
-            background: linear-gradient(145deg, #ff6f61, #d13c3c);
-            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1), -10px -10px 20px rgba(255, 255, 255, 0.3);
-        }
-
-        .form-container h1 {
-            font-family: 'Arial', sans-serif;
-            color: white;
-        }
-
-        .form-container input,
-        .form-container select,
-        .form-container button {
-            transition: all 0.3s ease;
-        }
-
-        .form-container input:focus,
-        .form-container select:focus,
-        .form-container button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-container label {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .form-container input,
-        .form-container select {
-            background-color: #ffffff;
-            border: 2px solid #ddd;
-            padding: 12px 15px;
-            border-radius: 8px;
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        .form-container button {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-            border-radius: 8px;
-            padding: 12px;
-            border: none;
-            width: 100%;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-
-        .form-container button:hover {
-            background-color: #45a049;
-        }
-
-        .error-message {
-            color: #ff6f61;
-            margin-bottom: 15px;
-        }
-    </style>
 </head>
 
-<body class="font-sans text-gray-800">
+<body class="bg-gray-100 text-gray-900 font-sans">
 
-    <div class="form-container max-w-md mx-auto mt-16 p-8 rounded-xl shadow-lg">
-        <h1 class="text-3xl text-center mb-6">Sélectionnez un utilisateur</h1>
+    <div class="max-w-md mx-auto mt-16 p-8 bg-white shadow-lg rounded-lg">
+        <h1 class="text-3xl text-center text-gray-800 mb-6">Sélectionnez un utilisateur</h1>
 
         <?php if (!empty($error)): ?>
-            <p class="error-message text-center"><?= htmlspecialchars($error) ?></p>
+            <p class="text-red-500 text-center mb-6"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
         <form method="POST">
-            <div>
-                <label for="user_id" class="block text-xl">Utilisateur :</label>
-                <select name="user_id" id="user_id" required>
+            <div class="mb-6">
+                <label for="user_id" class="block text-lg font-medium text-gray-700 mb-2">Utilisateur :</label>
+                <select name="user_id" id="user_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     <option value="">-- Sélectionnez un utilisateur --</option>
                     <?php foreach ($users as $user): ?>
                         <option value="<?= $user['id'] ?>"><?= htmlspecialchars($user['name']) ?></option>
@@ -134,7 +73,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </select>
             </div>
 
-            <button type="submit">Se connecter</button>
+            <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300">
+                Se connecter
+            </button>
         </form>
     </div>
 
