@@ -63,7 +63,7 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
 <body class="bg-gray-100 text-gray-900 font-sans">
 
     <!-- Navigation -->
-    <nav class="bg-blue-600 p-4">
+    <nav class="bg-red-600 p-4">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="text-white text-2xl font-semibold">
                 <span class="font-bold">Bienvenue</span> <?= htmlspecialchars($user_name); ?>
