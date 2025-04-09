@@ -1,6 +1,7 @@
 <?php
+ob_start(); // Active le tampon de sortie pour éviter les erreurs de header
 
-include 'header.php'; // Vérifie le token et récupère l'utilisateur connecté
+include 'header.php'; // Démarre la session ici
 
 // Ajout d'un utilisateur
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_user'])) {
@@ -9,7 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_user'])) {
     if (!empty($name)) {
         $stmt = $pdo->prepare("INSERT INTO users (name) VALUES (?)");
         $stmt->execute([$name]);
+        $_SESSION['message'] = "Utilisateur ajouté avec succès.";
     }
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 // Suppression d'un utilisateur
@@ -17,6 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
     $user_id = $_POST['user_id'] ?? 0;
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
+    $_SESSION['message'] = "Utilisateur supprimé avec succès.";
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 // Modification d'un utilisateur
@@ -27,7 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
     if (!empty($name)) {
         $stmt = $pdo->prepare("UPDATE users SET name = ? WHERE id = ?");
         $stmt->execute([$name, $user_id]);
+        $_SESSION['message'] = "Nom de l'utilisateur mis à jour.";
     }
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 // Récupération de tous les utilisateurs
@@ -47,6 +60,12 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body class="bg-gray-50 font-sans antialiased">
     <div class="container mx-auto p-6">
+        <!-- Message flash -->
+        <?php if (!empty($_SESSION['message'])): ?>
+            <p class="text-center text-green-600 font-semibold mb-6"><?= htmlspecialchars($_SESSION['message']); ?></p>
+            <?php unset($_SESSION['message']); ?>
+        <?php endif; ?>
+
         <!-- Formulaire d'ajout d'utilisateur -->
         <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-10">
             <h2 class="text-3xl font-semibold text-center text-indigo-600 mb-6">Ajouter un utilisateur</h2>
