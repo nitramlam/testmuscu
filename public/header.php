@@ -69,40 +69,75 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
     <title><?= htmlspecialchars($title ?? 'Programme Salle de Sport') ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="tailwind-config.js"></script>
-    <link href="custom.css" rel="stylesheet">
+
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 
 <body class="bg-gray-50 min-h-screen flex flex-col font-sans"></body>
     <!-- Header avec vos styles -->
-    <header class="nav-header shadow-nav animate-fade-in-down">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center py-4 nav-container">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-dumbbell text-white text-2xl"></i>
-                    <span class="text-blue text-xl font-bold">
-                        <?= htmlspecialchars($user_name) ?>
-                    </span>
-                </div>
+    
+    <!-- Header responsive amélioré -->
 
-                <nav class="flex items-center space-x-6 nav-links">
-                    <a href="manage_users.php?<?= $query_params ?>" class="nav-link">
-                        <i class="fas fa-users mr-2"></i>Utilisateurs
-                    </a>
-                    <a href="sessions.php?<?= $query_params ?>" class="nav-link">
-                        <i class="fas fa-calendar-alt mr-2"></i>Sessions
-                    </a>
-                    <a href="exercises_page.php" class="nav-link">
-                        <i class="fas fa-dumbbell mr-2"></i>Exercices
-                    </a>
-                    <a href="index.php" class="nav-link text-orange-300">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
-                    </a>
-                </nav>
+    <header class="bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md pb-4 mb-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+            <!-- Logo / utilisateur -->
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-dumbbell text-2xl"></i>
+                <span class="text-xl font-bold">
+                    <?= htmlspecialchars($user_name) ?>
+                </span>
             </div>
+
+            <!-- Bouton burger mobile -->
+            <div class="sm:hidden">
+                <button onclick="toggleMenu()" class="focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation principale -->
+            <nav id="nav-links" class="hidden sm:flex space-x-6 items-center">
+                <a href="manage_users.php?<?= $query_params ?>" class="hover:text-orange-300 transition">
+                    <i class="fas fa-users mr-2"></i>Utilisateurs
+                </a>
+                <a href="sessions.php?<?= $query_params ?>" class="hover:text-orange-300 transition">
+                    <i class="fas fa-calendar-alt mr-2"></i>Sessions
+                </a>
+                <a href="exercises_page.php" class="hover:text-orange-300 transition">
+                    <i class="fas fa-dumbbell mr-2"></i>Exercices
+                </a>
+                <a href="index.php" class="text-orange-300 hover:text-white transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                </a>
+            </nav>
         </div>
-    </header>
+
+        <!-- Navigation mobile -->
+        <div id="mobile-menu" class="sm:hidden hidden flex-col space-y-3 pb-4">
+            <a href="manage_users.php?<?= $query_params ?>" class="block text-sm hover:text-orange-300">
+                <i class="fas fa-users mr-2"></i>Utilisateurs
+            </a>
+            <a href="sessions.php?<?= $query_params ?>" class="block text-sm hover:text-orange-300">
+                <i class="fas fa-calendar-alt mr-2"></i>Sessions
+            </a>
+            <a href="exercises_page.php" class="block text-sm hover:text-orange-300">
+                <i class="fas fa-dumbbell mr-2"></i>Exercices
+            </a>
+            <a href="index.php" class="block text-sm text-orange-300 hover:text-white">
+                <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+            </a>
+        </div>
+    </div>
+</header>
+<!-- Script toggle menu -->
+<script>
+    function toggleMenu() {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+</script>
 
 </body>
 

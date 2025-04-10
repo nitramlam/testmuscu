@@ -55,7 +55,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     <!-- Notre configuration personnalisée -->
     <script src="tailwind-config.js"></script>
-    <link href="custom.css" rel="stylesheet">
+   
+    
     
     
 </head>
