@@ -41,56 +41,112 @@ $stmt->execute([$user_id]); // $user_id est défini dans header.php
 $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sessions de <?= htmlspecialchars($user_name); ?></title>
-    <!-- CDN de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind-config.js"></script>
+    <link href="custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-gray-100 text-gray-900 font-sans">
-
-    <div class="max-w-4xl mx-auto mt-12 p-8 bg-white shadow-lg rounded-lg">
-        <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">Sessions de <?= htmlspecialchars($user_name); ?></h2>
+<body class="bg-gradient-to-br from-primary-50 to-primary-100 min-h-screen p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header avec bouton add flottant -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-primary-800 flex items-center">
+                <i class="fas fa-calendar-alt mr-3 text-primary-600"></i>
+                Mes Sessions
+            </h1>
+            <button onclick="document.getElementById('addSessionModal').classList.remove('hidden')"
+                    class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-full shadow-lg flex items-center transition-all hover:scale-105">
+                <i class="fas fa-plus mr-2"></i> Nouvelle session
+            </button>
+        </div>
 
         <?php if (!empty($message)): ?>
-            <p class="text-center text-red-500 mb-6"><?= htmlspecialchars($message); ?></p>
+            <div class="mb-6 p-4 rounded-lg <?= strpos($message, 'succès') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
+                <?= htmlspecialchars($message); ?>
+            </div>
         <?php endif; ?>
 
-        <!-- Formulaire pour ajouter une session -->
-        <form method="POST" action="sessions.php" class="mb-6">
-            <div class="flex flex-col items-center">
-                <input type="text" name="session_name" placeholder="Nom de la session" maxlength="15" required
-                    class="p-3 border border-gray-300 rounded-lg w-72 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button type="submit"
-                    class="bg-blue-500 text-white p-3 rounded-lg w-72 hover:bg-blue-600 transition duration-300">Ajouter</button>
+        <!-- Modal d'ajout (caché par défaut) -->
+        <div id="addSessionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-primary-700">Nouvelle Session</h3>
+                    <button onclick="document.getElementById('addSessionModal').classList.add('hidden')"
+                            class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form method="POST" action="sessions.php">
+                    <input type="text" 
+                           name="session_name" 
+                           placeholder="Ex: Routine Matinale" 
+                           maxlength="20"
+                           required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-primary-500">
+                    <button type="submit"
+                            class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 px-4 rounded-lg transition-colors">
+                        Créer la session
+                    </button>
+                </form>
             </div>
-        </form>
+        </div>
 
         <!-- Liste des sessions -->
-        <ul class="space-y-4">
-            <?php foreach ($sessions as $session): ?>
-                <li class="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-md">
-                    <a href="exercises.php?session_id=<?= $session['id']; ?>" class="text-lg font-medium text-blue-600 hover:underline">
-                        <?= htmlspecialchars($session['name']); ?>
-                    </a>
-                    <!-- Formulaire pour supprimer une session -->
-                    <form method="POST" action="sessions.php" style="display:inline;">
-                        <input type="hidden" name="delete_session_id" value="<?= $session['id']; ?>">
-                        <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette session ?');"
-                            class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition duration-300">
-                            Supprimer
-                        </button>
-                    </form>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <?php if (empty($sessions)): ?>
+            <div class="bg-white rounded-xl p-8 text-center shadow-sm">
+                <i class="fas fa-calendar-plus text-5xl text-primary-400 mb-4"></i>
+                <h3 class="text-xl font-medium text-gray-700 mb-2">Aucune session créée</h3>
+                <p class="text-gray-500 mb-4">Commencez par créer votre première session d'entraînement</p>
+                <button onclick="document.getElementById('addSessionModal').classList.remove('hidden')"
+                        class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg">
+                    Créer une session
+                </button>
+            </div>
+        <?php else: ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($sessions as $session): ?>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-4 text-white">
+                            <h3 class="text-xl font-semibold flex items-center">
+                                <i class="fas fa-dumbbell mr-2"></i>
+                                <?= htmlspecialchars($session['name']); ?>
+                            </h3>
+                        </div>
+                        <div class="p-5 flex justify-between items-center">
+                            <a href="exercises.php?session_id=<?= $session['id']; ?>"
+                               class="text-primary-600 hover:text-primary-800 font-medium flex items-center">
+                                Voir les exercices <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                            <form method="POST" action="sessions.php">
+                                <input type="hidden" name="delete_session_id" value="<?= $session['id']; ?>">
+                                <button type="submit" 
+                                        onclick="return confirm('Supprimer cette session et tous ses exercices ?');"
+                                        class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
 
+    <script>
+        // Fermer la modal avec ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('addSessionModal').classList.add('hidden');
+            }
+        });
+    </script>
 </body>
-
 </html>

@@ -61,30 +61,48 @@ $query_params = http_build_query(['user_id' => $user_id] + ($session_id ? ['sess
 </head>
 
 <body class="bg-gray-100 text-gray-900 font-sans">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($title ?? 'Programme Salle de Sport') ?></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind-config.js"></script>
+    <link href="custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 
-    <!-- Navigation -->
-    <nav class="bg-red-600 p-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="text-white text-2xl font-semibold">
-                <span class="font-bold">Bienvenue</span> <?= htmlspecialchars($user_name); ?>
-            </div>
 
-            <div class="space-x-6">
-                <a href="manage_users.php?<?= $query_params ?>"
-                    class="text-white hover:text-blue-300 transition duration-300">Utilisateurs</a>
-                <a href="sessions.php?<?= $query_params ?>"
-                    class="text-white hover:text-blue-300 transition duration-300">Sessions</a>
-                    <a href="exercises_page.php" class="text-white hover:text-blue-300 transition duration-300">Exercices</a>
-                <a href="index.php" class="text-orange hover:text-blue-300 transition duration-300">Déconnexion</a>
-                
+<body class="bg-gray-50 min-h-screen flex flex-col font-sans"></body>
+    <!-- Header avec vos styles -->
+    <header class="nav-header shadow-nav animate-fade-in-down">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4 nav-container">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-dumbbell text-white text-2xl"></i>
+                    <span class="text-blue text-xl font-bold">
+                        <?= htmlspecialchars($user_name) ?>
+                    </span>
+                </div>
+
+                <nav class="flex items-center space-x-6 nav-links">
+                    <a href="manage_users.php?<?= $query_params ?>" class="nav-link">
+                        <i class="fas fa-users mr-2"></i>Utilisateurs
+                    </a>
+                    <a href="sessions.php?<?= $query_params ?>" class="nav-link">
+                        <i class="fas fa-calendar-alt mr-2"></i>Sessions
+                    </a>
+                    <a href="exercises_page.php" class="nav-link">
+                        <i class="fas fa-dumbbell mr-2"></i>Exercices
+                    </a>
+                    <a href="index.php" class="nav-link text-orange-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                    </a>
+                </nav>
             </div>
         </div>
-    </nav>
-
-    <!-- Contenu principal de la page -->
-    <div class="container mx-auto p-8">
-        <!-- Page content here -->
-    </div>
+    </header>
 
 </body>
 

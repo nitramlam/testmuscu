@@ -1,0 +1,86 @@
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Classes de base */
+body {
+  @apply bg-gradient-to-br from-primary-50 to-primary-100 min-h-screen;
+}
+
+/* Composants */
+.btn-primary {
+  @apply bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-all;
+}
+
+.btn-danger {
+  @apply bg-danger-500 text-white px-4 py-2 rounded-lg hover:bg-danger-600 transition-colors;
+}
+
+.session-card {
+  @apply bg-white bg-opacity-90 backdrop-blur-lg p-6 rounded-xl shadow-card transition-all;
+  &:hover {
+    @apply transform -translate-y-1 shadow-card-hover;
+  }
+}
+
+/* Header */
+.nav-header {
+  @apply bg-header-bg shadow-nav;
+}
+
+.nav-link {
+  @apply text-header-text relative pb-1 transition-colors;
+  &::after {
+    @apply content-[''] absolute bottom-0 left-0 w-0 h-0.5 bg-header-hover transition-all;
+  }
+  &:hover {
+    @apply text-header-hover;
+    &::after {
+      @apply w-full;
+    }
+  }
+}
+
+/* Messages */
+.alert-success {
+  @apply bg-green-100 text-green-700 px-4 py-3 rounded-lg;
+}
+
+.alert-error {
+  @apply bg-red-100 text-red-700 px-4 py-3 rounded-lg;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    @apply flex-col p-4;
+  }
+  .nav-links {
+    @apply mt-4 flex-col gap-2;
+  }
+}
+
+/* Effets spéciaux */
+.glass-effect {
+  @apply bg-white bg-opacity-90 backdrop-blur-md;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.5s ease-out;
+}
