@@ -1,57 +1,52 @@
-
-version: '3.8'
-
 services:
   mysql:
     image: mysql:latest
-    container_name: mysql-muscu
+    container_name: test-mysql-muscu
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: muscu1234
       MYSQL_DATABASE: musculation_db
     ports:
-      - "3306:3306"
+      - "3399:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - test-mysql-data:/var/lib/mysql
       - ./SQL:/docker-entrypoint-initdb.d
     networks:
-      - muscu-network
-    platform: linux/amd64 # Forcer l'architecture pour compatibilité avec ARM64
+      - test-muscu-network
+    platform: linux/amd64
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin-muscu
+    container_name: test-phpmyadmin-muscu
     restart: always
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
     ports:
-      - "8080:80"
+      - "8099:80"
     networks:
-      - muscu-network
+      - test-muscu-network
     depends_on:
       - mysql
-    platform: linux/amd64 # Forcer l'architecture pour compatibilité avec ARM64
+    platform: linux/amd64
 
   php-apache:
-    build:
-      context: .
-      dockerfile: php-apache.Dockerfile
-    container_name: php-muscu
+    image: webdevops/php-apache:7.4
+    container_name: test-php-muscu
     restart: always
-    working_dir: /var/www/html
+    working_dir: /app
     volumes:
-      - ./public:/var/www/html
+      - ./public:/app
     ports:
-      - "8000:80"
+      - "8999:80"
     networks:
-      - muscu-network
+      - test-muscu-network
     depends_on:
       - mysql
-    platform: linux/amd64 # Forcer l'architecture pour compatibilité avec ARM64
+    platform: linux/amd64
 
 volumes:
-  mysql-data:
+  test-mysql-data:
 
 networks:
-  muscu-network:
+  test-muscu-network:
