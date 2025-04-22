@@ -61,7 +61,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
 </head>
 
-<body class="bg-gradient-to-br from-primary-50 to-primary-100 min-h-screen flex items-center justify-center p-4 font-sans">
+<body class="bg-gradient-to-br from-green-200 to-green-500 min-h-screen flex items-center justify-center p-4 font-sans"></body>
     <!-- Éléments décoratifs animés -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-primary-200 opacity-20 mix-blend-multiply filter blur-3xl animate-float"></div>
